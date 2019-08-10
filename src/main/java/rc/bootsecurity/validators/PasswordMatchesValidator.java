@@ -1,7 +1,7 @@
 package rc.bootsecurity.validators;
 
 import rc.bootsecurity.annotations.PasswordMatches;
-import rc.bootsecurity.model.registration.UserRegistration;
+import rc.bootsecurity.model.registration.UserRegistrationRequest;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -14,7 +14,7 @@ public class PasswordMatchesValidator
     }
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context){
-        UserRegistration user = (UserRegistration) obj;
+        UserRegistrationRequest user = (UserRegistrationRequest) obj;
         return user.getPassword().equals(user.getMatchingPassword());
     }     
 }

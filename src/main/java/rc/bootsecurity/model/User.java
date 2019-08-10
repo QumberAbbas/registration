@@ -1,74 +1,168 @@
 package rc.bootsecurity.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.*;
 
 @Entity
-public class User {
+public class User extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(nullable = false)
-    private String username;
+    @Column(name = "user_name", nullable = false)
+    @Size(min = 4, max = 50)
+    private String userName;
 
-    @Column(nullable = false)
+    @NotNull
+    @Size(min = 4, max = 100)
     private String password;
 
-    private int active;
+    @Column(name = "first_name", nullable = false)
+    @Size(min = 4, max = 50)
+    private String firstName;
 
-    private String roles = "";
+    @Column(name = "last_name", nullable = false)
+    @NotNull
+    @Size(min = 4, max = 50)
+    private String lastName;
 
-    private String permissions = "";
+    @Column(nullable = false)
+    @Size(min = 4, max = 50)
+    private String email;
 
-    public User(String username, String password, String roles, String permissions){
-        this.username = username;
+    @Column(nullable = false, name = "phone_number")
+    private String phoneNumber;
+
+    private int status = 0;
+
+    @Column(name = "wrong_password_attempts")
+    private int wrongPasswordAttempts = 0;
+
+    @Column(name = "is_account_blocked")
+    private boolean isAccountBlocked = false;
+
+    @Column(name = "last_password_reset_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    private Date lastPasswordResetDate;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_authority",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id")})
+    private Set<Authority> authorities;
+
+
+    public User(String email, String password, String firstName, String lastName, String phoneNumber, Set<Authority> authorities) {
+        this.userName = firstName + lastName;
         this.password = password;
-        this.roles = roles;
-        this.permissions = permissions;
-        this.active = 1;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.authorities = authorities;
     }
-
-    protected User(){}
 
     public long getId() {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public int getActive() {
-        return active;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getRoles() {
-        return roles;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getPermissions() {
-        return permissions;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public List<String> getRoleList(){
-        if(this.roles.length() > 0){
-            return Arrays.asList(this.roles.split(","));
-        }
-        return new ArrayList<>();
+    public String getLastName() {
+        return lastName;
     }
 
-    public List<String> getPermissionList(){
-        if(this.permissions.length() > 0){
-            return Arrays.asList(this.permissions.split(","));
-        }
-        return new ArrayList<>();
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getWrongPasswordAttempts() {
+        return wrongPasswordAttempts;
+    }
+
+    public void setWrongPasswordAttempts(int wrongPasswordAttempts) {
+        this.wrongPasswordAttempts = wrongPasswordAttempts;
+    }
+
+    public boolean isAccountBlocked() {
+        return isAccountBlocked;
+    }
+
+    public void setAccountBlocked(boolean accountBlocked) {
+        isAccountBlocked = accountBlocked;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public boolean getIsAccountBlocked() {
+        return wrongPasswordAttempts >= 3;
+    }
+
+    public Date getLastPasswordResetDate() {
+        return lastPasswordResetDate;
+    }
+
+    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+        this.lastPasswordResetDate = lastPasswordResetDate;
     }
 }

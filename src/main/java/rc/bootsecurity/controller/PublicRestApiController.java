@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import rc.bootsecurity.db.UserRepository;
 import rc.bootsecurity.model.User;
+import rc.bootsecurity.repository.IUserRepository;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import java.util.List;
 @RequestMapping("api/public")
 @CrossOrigin
 public class PublicRestApiController {
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
-    public PublicRestApiController(UserRepository userRepository){
+    public PublicRestApiController(IUserRepository userRepository){
         this.userRepository = userRepository;
     }
 
